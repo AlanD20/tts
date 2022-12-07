@@ -1,6 +1,10 @@
 import { TextareaHTMLAttributes } from 'react';
 
-interface Props extends TextareaHTMLAttributes<HTMLTextAreaElement> {
+interface Props
+  extends React.DetailedHTMLProps<
+    TextareaHTMLAttributes<HTMLTextAreaElement>,
+    HTMLTextAreaElement
+  > {
   label: string;
   name: string;
   className?: string;

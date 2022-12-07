@@ -10,7 +10,7 @@ const Button = ({ label, type = 'submit', children, ...attr }: Props) => (
   <button
     {...attr}
     type={type}
-    className={`btn btn-primary btn-md capitalize flex gap-2 items-center ${attr.className}`}
+    className={`btn btn-primary btn-md text-white capitalize flex gap-2 items-center text-lg ${attr.className}`}
   >
     {label ? <span>{label}</span> : children}
   </button>

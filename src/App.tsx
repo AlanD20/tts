@@ -1,4 +1,5 @@
 import Select from 'react-select';
+import Footer from '@comp/Footer';
 import Button from '@comp/Button';
 import axios from './common/axios';
 import config from './common/config';
@@ -6,28 +7,37 @@ import voices from './common/voices';
 import Textarea from '@comp/Textarea';
 import TitleText from '@comp/TitleText';
 import PageLayout from '@comp/PageLayout';
+import { useEffect, useState } from 'react';
+import AudioPlayer from '@comp/AudioPlayer';
 import ContainerLayout from '@comp/ContainerLayout';
-import { useEffect, useMemo, useRef, useState } from 'react';
+
+const VoicesObj = () =>
+  voices
+    .sort((a: any, b: any) => a.localeCompare(b))
+    .map((v) => ({
+      label: v,
+      value: v,
+    }));
 
 const App = () => {
-  const [text, setText] = useState<string>('');
-  const [voice, setVoice] = useState<string>('');
+  const [inputText, setInputText] = useState<string>('');
+  const [voice, setVoice] = useState<string>('Brian');
   const [status, setStatus] = useState<string>('');
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const srcRef = useRef<HTMLSourceElement | null>(null);
+  const [blobUrl, setBlobUrl] = useState<string>('');
 
-  const VoicesObj = useMemo(
-    () =>
-      voices
-        .sort((a: any, b: any) => a.localeCompare(b))
-        .map((v) => ({
-          label: v,
-          value: v,
-        })),
-    []
-  );
+  useEffect(() => {
+    const time = setTimeout(() => setStatus(''), 3500);
+    return () => clearTimeout(time);
+  }, [status]);
 
   const handlePlayButton = async () => {
+    const text = inputText.trim();
+
+    if (!text) {
+      setStatus('Input text is empty!');
+      return;
+    }
+
     try {
       const { data, status } = await axios.get(config.api, {
         params: { text, voice },
@@ -39,47 +49,49 @@ const App = () => {
         return;
       }
 
-      let blobUrl = URL.createObjectURL(data);
-      srcRef.current?.setAttribute('src', blobUrl);
-      audioRef.current?.pause();
-      audioRef.current?.load();
-      audioRef.current?.play();
+      setBlobUrl(URL.createObjectURL(data));
     } catch {
       setStatus('Failed to get a response from the server!');
     }
   };
 
-  useEffect(() => {
-    const time = setTimeout(() => setStatus(''), 3500);
-    return () => clearTimeout(time);
-  }, [status]);
-
   return (
     <PageLayout className="gap-8">
       <TitleText text="Text Reader From Stream Element!" />
-      {status && <span className="text-red-500">{status}</span>}
 
-      <ContainerLayout className="flex-col gap-8 items-stretch w-[65ch]">
+      {status && <span className="text-red-500 font-bold">{status}</span>}
+
+      <ContainerLayout className="w-3/4 max-w-screen-md min-w-[320px] flex-col gap-8 items-stretch ">
         <Textarea
           label="Text"
           name="text"
-          value={text}
+          value={inputText}
           className="textarea-secondary h-48"
-          onChange={(e) => setText(e.target.value)}
+          onChange={(e) => setInputText(e.target.value)}
         />
-        <Select
-          options={VoicesObj}
-          className="text-primary"
-          onChange={(e) => setVoice(e?.value as string)}
+        <label
+          htmlFor="voice"
+          className="label capitalize flex flex-col w-full items-start"
+        >
+          Voice
+          <Select
+            id="voice"
+            options={VoicesObj()}
+            className="mt-2 text-secondary w-full font-bold"
+            defaultValue={{ value: 'brian', label: 'Brian' }}
+            onChange={(e) => setVoice(e?.value as string)}
+          />
+        </label>
+        <Button
+          label="Play"
+          onClick={handlePlayButton}
+          className="hover:text-white font-bold"
         />
-        <Button label="Play" onClick={handlePlayButton} />
       </ContainerLayout>
 
-      <ContainerLayout>
-        <audio ref={audioRef} controls={true}>
-          <source ref={srcRef} type="audio/wav" />
-        </audio>
-      </ContainerLayout>
+      <AudioPlayer blobUrl={blobUrl} />
+
+      <Footer />
     </PageLayout>
   );
 };

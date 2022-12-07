@@ -2,7 +2,7 @@
 
 Simple web page that uses Stream Element API to generate the AI voice.
 
-### [Live](https://se-text-reader.aland20.com/)
+### [Live](https://tts.aland20.com/)
 
 ## License
 

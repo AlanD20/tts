@@ -4,9 +4,7 @@ interface Props {
 }
 
 const PageLayout = ({ children, className = '' }: Props) => (
-  <div
-    className={`flex flex-col items-center relative w-full h-screen ${className}`}
-  >
+  <div className={`flex flex-col items-center relative w-full ${className}`}>
     {children}
   </div>
 );
