@@ -20,6 +20,7 @@ const VoicesObj = () =>
     }));
 
 const App = () => {
+
   const [inputText, setInputText] = useState<string>('');
   const [voice, setVoice] = useState<string>('Brian');
   const [status, setStatus] = useState<string>('');
@@ -57,7 +58,7 @@ const App = () => {
 
   return (
     <PageLayout className="gap-8">
-      <TitleText text="Text Reader From Stream Element!" />
+      <TitleText text="TTS Using Stream Element!" />
 
       {status && <span className="text-red-500 font-bold">{status}</span>}
 

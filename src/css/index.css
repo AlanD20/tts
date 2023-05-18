@@ -8,7 +8,7 @@ button {
 }
 html,
 body {
-  @apply text-base w-full;
+  @apply text-base w-full h-screen;
   background-color: #ebeaf075;
 }
 

@@ -1,7 +1,7 @@
 const Footer = () => (
   <footer className="w-full flex justify-center mt-4">
     <a
-      href="//github.com/AlanD20/se-text-reader"
+      href="//github.com/AlanD20/tts"
       className="flex gap-2 items-center hover:text-secondary font-bold"
     >
       Created by AlanD20

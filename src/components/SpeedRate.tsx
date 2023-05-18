@@ -1,19 +1,22 @@
 import Button from './Button';
 import ContainerLayout from './ContainerLayout';
-import { MutableRefObject, useState } from 'react';
+import { MutableRefObject, useEffect, useState } from 'react';
 
 type Props = {
   audioRef: MutableRefObject<HTMLAudioElement | null>;
   isDisabled: boolean;
+  speedRate: number;
+  setSpeedRate: React.Dispatch<React.SetStateAction<number>>
 };
 
 const MIN_SPEED_RATE = 0;
 const MAX_SPEED_RATE = 4;
 
-const SpeedRate = ({ isDisabled, audioRef }: Props) => {
-  const [speedRate, setSpeedRate] = useState<number>(1);
+const SpeedRate = ({ isDisabled, audioRef, speedRate, setSpeedRate }: Props) => {
+
 
   const handleSpeedRate = (type: 'up' | 'down') => {
+
     if (!audioRef.current) return;
 
     let currentRate = audioRef.current.playbackRate;

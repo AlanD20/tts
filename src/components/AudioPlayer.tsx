@@ -1,6 +1,6 @@
 import Button from './Button';
 import SpeedRate from './SpeedRate';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ContainerLayout from './ContainerLayout';
 
 type Props = {
@@ -8,22 +8,28 @@ type Props = {
 };
 
 const AudioPlayer = ({ blobUrl }: Props) => {
+
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const srcRef = useRef<HTMLSourceElement | null>(null);
   const isBlobUrlEmpty = blobUrl.length === 0;
+  const [speedRate, setSpeedRate] = useState<number>(1);
 
   useEffect(() => {
-    if (blobUrl) {
+    if (blobUrl && audioRef.current) {
+
       srcRef.current?.setAttribute('src', blobUrl);
-      audioRef.current?.pause();
-      audioRef.current?.load();
-      audioRef.current?.play();
+
+      audioRef.current.pause();
+      audioRef.current.load();
+      audioRef.current.play();
+      audioRef.current.playbackRate = speedRate
+
     }
   }, [blobUrl]);
 
   return (
     <>
-      <SpeedRate isDisabled={isBlobUrlEmpty} audioRef={audioRef} />
+      <SpeedRate isDisabled={isBlobUrlEmpty} audioRef={audioRef} speedRate={speedRate} setSpeedRate={setSpeedRate} />
 
       <ContainerLayout className="w-full flex-col">
         <audio
